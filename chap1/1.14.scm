@@ -15,5 +15,5 @@
 ; (c-change n 5)
 ;	(c-change n 4) + (c-change n-a[5] 5)
 ; 
-; T = n^2
-; M = n^2
+; T = n^5
+; M = n^5
