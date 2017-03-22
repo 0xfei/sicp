@@ -1,0 +1,10 @@
+(define (multi a b)
+ (define (even? x) (= (remainder x 2) 0))
+ (define (double x) (* x 2))
+ (define (halve x) (/ x 2))
+ (define (deal a b n)
+  (cond ((= n 0) a)
+		((even? n) (deal a (double b) (halve n)))
+		(else (deal (+ a b) (double b) (halve (- n 1))))))
+ (deal 0 a b))
+
