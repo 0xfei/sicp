@@ -1,0 +1,13 @@
+(define (deep-reverse l)
+ (define (it-reverse s)
+  (if (pair? s)
+   (deep-reverse s)
+   s))
+ (define (do-reverse l1 l2)
+  (let ((s (car l1))
+		(t (cdr l1)))
+   (if (null? t)
+	(cons (it-reverse s) l2)
+	(do-reverse t (cons (it-reverse s) l2)))))
+ (do-reverse l (list)))
+
