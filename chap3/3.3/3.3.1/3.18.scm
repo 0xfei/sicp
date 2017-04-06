@@ -1,0 +1,13 @@
+(define (cycle? x)
+  (let ((sa '()))
+    (define (exist? x now)
+      (cond ((null? now) false)
+            ((eq? x (car now)) true)
+            (else (exist? x (cdr now)))))
+    (define (check x)
+      (cond ((not (pair? x)) false)
+            ((exist? x sa) true)
+            (else (set! sa (cons x sa))
+                  (check (cdr x)))))
+    (check x)))
+

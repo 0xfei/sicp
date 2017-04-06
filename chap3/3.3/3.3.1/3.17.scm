@@ -1,0 +1,15 @@
+(define (count-pairs x)
+  (let ((saved '()))
+    (define (exist? x now)
+      (cond ((null? now) false)
+            ((eq? x (car now)) true)
+            (else (exist? x (cdr now)))))
+    (define (do-count x)
+      (if (or (not (pair? x)) (exist? x saved))
+        0
+        (begin (set! saved (cons x saved))
+               (+ (do-count (car x))
+                  (do-count (cdr x))
+                  1))))
+    (do-count x)))
+
