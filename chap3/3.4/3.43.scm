@@ -1,0 +1,38 @@
+(load "mutex.scm")
+
+(define (make-account-and-serializer balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+      (begin (set! balance (- balance amount))
+             balance)
+      "Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (let ((balance-serializer (make-serializer)))
+    (define (dispatch m)
+      (cond ((eq? m 'withdraw) withdraw)
+            ((eq? m 'deposit) deposit)
+            ((eq? m 'balance) balance)
+            ((eq? m 'serializer) balance-serializer)
+            (else (error "Unknown request -- MAKE-ACCOUNT" m))))
+    dispatch))
+
+(define (exchange a1 a2)
+  (let ((d (- (a1 'balance)
+              (a2 'balance))))
+    ((a1 'withdraw) d)
+    ((a2 'deposit) d)))
+
+(define (deposit account amount)
+  (let ((s (account 'serializer))
+        (d (account 'deposit)))
+    ((s d) amount)))
+
+(define (serialized-exchange a1 a2)
+  (let ((s1 (a1 'serializer))
+        (s2 (a2 'serializer)))
+    ((s1 (s2 exchange))
+     a1
+     a2)))
+
