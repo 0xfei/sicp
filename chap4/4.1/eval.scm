@@ -1,0 +1,61 @@
+(define (eval exp env)
+  (cond ((self-evaluating? exp) expression)
+        ((variable? exp) (lookup-variable-value expression env))
+        ((quoted? exp) (text-of-quotation expression))
+        ((assignment? exp) (eval-assignment expression env))
+        ((definition? exp) (eval-definition expression env))
+        ((if? exp) (eval-if expression env))
+        ((lambda? exp)
+         (make-procedure (lambda-parameters exp)
+                         (lambda-body exp)
+                         env))
+        ((begin? exp)
+         (eval-sequence (begin-actions exp) env))
+        ((cond? exp)
+         (eval (cond-if exp) env))
+        ((application? exp)
+         (apply (eval (operator exp) env)
+                (list-of-values (operands exp) env)))
+        (else "Error exp")))
+
+(define (apply procedure arguments)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure procedure arguments))
+        ((compound-procedure? procedure)
+         (eval-sequence
+           (procedure-body procedure)
+           (extend-environment
+             (procedure-parameters procedure)
+             arguments
+             (procedure-environment procedure))))
+        (else "Error exp")))
+
+(define (list-of-values exps env)
+  (if (no-operands? exps)
+    '()
+    (cons (eval (first-operands exps) env)
+          (list-of-values (rest-operands exps) env))))
+
+(define (eval-if exp env)
+  (if (true? (eval (if-predicate exp) env))
+             (eval (if-consequent exp) env)
+             (eval (if-alternative exp) env)))
+
+(define (eval-sequence exps env)
+  (cond ((last-exp? exps) (eval (first-exp exps) env))
+        (else (eval (first-exp exps) env)
+              (eval-sequence (restexps exps) env))))
+
+(define (eval-assignment exp env)
+  (set-variable-value! (assignment-variable exp)
+                       (eval (assignment-value exp) env)
+                       env)
+  'ok)
+
+(define (eval-definition exp env)
+  (define-variable! (definition-variable exp)
+                    (eval (definition-value exp) env)
+                    env)
+  'ok)
+
+
