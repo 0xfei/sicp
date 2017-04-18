@@ -12,7 +12,7 @@
         ((begin? exp)
          (eval-sequence (begin-actions exp) env))
         ((cond? exp)
-         (eval (cond-if exp) env))
+         (eval (cond->if exp) env))
         ((application? exp)
          (apply (eval (operator exp) env)
                 (list-of-values (operands exp) env)))
@@ -44,7 +44,7 @@
 (define (eval-sequence exps env)
   (cond ((last-exp? exps) (eval (first-exp exps) env))
         (else (eval (first-exp exps) env)
-              (eval-sequence (restexps exps) env))))
+              (eval-sequence (rest-exps exps) env))))
 
 (define (eval-assignment exp env)
   (set-variable-value! (assignment-variable exp)
@@ -57,5 +57,4 @@
                     (eval (definition-value exp) env)
                     env)
   'ok)
-
 
