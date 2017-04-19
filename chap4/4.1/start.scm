@@ -9,10 +9,12 @@
         (list 'cdr cdr)
         (list 'cons cons)
         (list 'null? null?)
+        (list 'display display)
         (list '+ +)
         (list '- -)
         (list '* *)
-        (list '/ /)))
+        (list '/ /)
+        (list '= =)))
 
 (define (primitive-procedure-names)
   (map car primitive-procedures))
@@ -34,7 +36,6 @@
     (define-variable! 'false false initial-env)
     initial-env))
 
-(define apply-in-underlying-scheme apply)
 (define the-global-environment (setup-environment))
 
 (define input-prompt ";;; M-Eval input: ")
