@@ -34,6 +34,7 @@
     (define-variable! 'false false initial-env)
     initial-env))
 
+(define apply-in-underlying-scheme apply)
 (define the-global-environment (setup-environment))
 
 (define input-prompt ";;; M-Eval input: ")
