@@ -85,7 +85,7 @@
   (cdr exp))
 
 (define (last-exp? seq)
-  (null? (cdr exp)))
+  (null? (cdr seq)))
 
 (define (first-exp seq)
   (car seq))
