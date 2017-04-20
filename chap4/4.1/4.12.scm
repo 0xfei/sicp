@@ -1,0 +1,13 @@
+(define (env-loop env var val f g)
+  (define (scan vars vals)
+    (cond ((null? vars)
+           (env-loop (enclosing-environment env) var val f g))
+          ((eq? var (car vars))
+           (f var vals))
+          (else (scan (cdr vars) (cdr vals)))))
+  (if (eq? env the-empty-environment)
+    (g env var val)
+    (let ((frame (first-frame env)))
+      (scan (frame-variables frame)
+            (frame-values frame)))))
+
