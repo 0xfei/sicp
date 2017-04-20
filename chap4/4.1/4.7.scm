@@ -1,0 +1,21 @@
+; (let* ((<a> <b>)
+;        (<c> <d>)
+;        (<e> <f>))
+;   <body>)
+
+; (let ((<a> <b>))
+;   (let ((<c> <d>))
+;     (let ((<e> <f>))
+;       <body>)
+
+(define (let*->nested-let exp)
+  (let ((param (let-lambda-parameters exp))
+        (value (let-lambda-values exp))
+        (body (let-body exp)))
+    (define (make-let* k v)
+      (if (null? (cdr k))
+        (make-let (list (car k) (car v)) body)
+        (make-let (list (car k) (car v))
+                  (make-let* (cdr k) (cdr v)))))
+    (make-let* param value)))
+

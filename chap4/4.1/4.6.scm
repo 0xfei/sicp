@@ -1,6 +1,9 @@
 (define (let? exp)
   (tagged-list? exp 'let))
 
+(define (make-let variable body)
+  (list 'let (list variable) body))
+
 (define (let-variables exp)
   (cadr exp))
 
